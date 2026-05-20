@@ -1,0 +1,268 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../lib/config';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 5);
+
+const series = (await getCollection('series', ({ data }) => data.lang === 'en'))
+  .sort((a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf());
+
+// count posts per series
+const allPosts = await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en');
+const seriesWithCounts = series.map((s) => ({
+  ...s,
+  postCount: allPosts.filter((p) => p.data.series === s.slug).length,
+}));
+
+// count posts per category
+const categoryCounts = allPosts.reduce<Record<string, number>>((acc, p) => {
+  acc[p.data.category] = (acc[p.data.category] || 0) + 1;
+  return acc;
+}, {});
+
+const categories = ['ai-agents', 'engineering', 'career', 'personal'] as const;
+---
+
+<BaseLayout title="Pedro Bonini" lang="en">
+  <section class="hero">
+    <div class="hero-head">
+      <img src={SITE.avatar} alt={SITE.name} class="hero-avatar" width="88" height="88" loading="eager" />
+      <h1>My name is Pedro Bonini.</h1>
+    </div>
+    <p>
+      I'm a software engineer based in southern Brazil. At <a
+        href="https://elotech.com.br"
+        target="_blank"
+        rel="noopener">Elotech</a
+      >, most of my work focuses on improving public-sector management for cities across the country
+      — building systems that impact millions of taxpayers every day.
+    </p>
+    <p>
+      In parallel, I build agents focused on software development, Skills that automate tasks, and
+      personal projects that turn ideas into real products.
+    </p>
+    <p>
+      I write about technology, software development, automation, and the lessons that come from
+      building. In Portuguese and English.
+    </p>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <span class="block-title">Recent posts</span>
+      <a href="/blog" class="block-link">all posts →</a>
+    </div>
+    <ul class="post-list">
+      {
+        posts.map((post) => (
+          <li>
+            <a href={`/blog/${post.slug}`}>
+              <span class="post-title">{post.data.title}</span>
+              <span class="post-date mono">
+                {post.data.pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <span class="block-title">Categories</span>
+    </div>
+    <div class="categories">
+      {
+        categories.map((cat) => (
+          <a href={`/blog?category=${cat}`} class="category-pill">
+            {cat} <span class="mono category-count">{categoryCounts[cat] || 0}</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    margin-bottom: 3rem;
+  }
+
+  .hero-head {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-avatar {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 0.5px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .hero h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0;
+    line-height: 1.25;
+  }
+
+  @media (max-width: 480px) {
+    .hero-avatar {
+      width: 64px;
+      height: 64px;
+    }
+    .hero h1 {
+      font-size: 22px;
+    }
+  }
+
+  .hero p {
+    font-size: 15px;
+    line-height: 1.75;
+    margin-bottom: 0.75rem;
+  }
+
+  .block {
+    margin-bottom: 2.5rem;
+  }
+
+  .block-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.75rem;
+  }
+
+  .block-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .block-link {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    text-decoration: none;
+  }
+
+  .block-link:hover {
+    color: var(--text);
+    opacity: 1;
+  }
+
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-list li {
+    margin: 0;
+  }
+
+  .post-list a {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 0.5px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .post-list a:hover {
+    color: var(--text);
+    opacity: 1;
+    background: var(--bg-secondary);
+    margin: 0 -8px;
+    padding: 10px 8px;
+  }
+
+  .post-date {
+    color: var(--text-tertiary);
+    font-size: 11px;
+    align-self: center;
+  }
+
+  .series-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .series-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    text-decoration: none;
+    color: var(--text);
+    transition: background var(--transition);
+  }
+
+  .series-card:hover {
+    background: var(--bg-tertiary);
+    opacity: 1;
+  }
+
+  .series-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 2px;
+  }
+
+  .series-title {
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .series-count {
+    font-size: 11px;
+    color: var(--text-tertiary);
+  }
+
+  .series-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .categories {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .category-pill {
+    font-size: 13px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--bg-secondary);
+    color: var(--text);
+    text-decoration: none;
+    transition: background var(--transition);
+  }
+
+  .category-pill:hover {
+    background: var(--bg-tertiary);
+    opacity: 1;
+  }
+
+  .category-count {
+    color: var(--text-tertiary);
+    font-size: 11px;
+    margin-left: 4px;
+  }
+</style>

@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const series = await getCollection('series', ({ data }) => data.lang === 'pt');
+  return series.map((s) => ({ params: { slug: s.slug }, props: { series: s } }));
+}
+
+const { series } = Astro.props;
+const { Content } = await series.render();
+const allPosts = await getCollection('posts', ({ data }) => !data.draft && data.lang === 'pt');
+const posts = allPosts
+  .filter((p) => p.data.series === series.slug)
+  .sort((a, b) => (a.data.part || 0) - (b.data.part || 0));
+
+const statusLabels = { ongoing: 'em andamento', completed: 'concluída', paused: 'pausada' };
+---
+
+<BaseLayout title={series.data.title} description={series.data.description} lang="pt">
+  <a href="/pt/series" class="back">← todas as séries</a>
+
+  <div class="series-meta mono">série · {posts.length} posts · {statusLabels[series.data.status]}</div>
+  <h1>{series.data.title}</h1>
+  <p class="series-desc">{series.data.description}</p>
+
+  <div class="prose"><Content /></div>
+
+  <div class="part-list">
+    {posts.map((post) => (
+      <a href={`/pt/blog/${post.slug}`} class="part-row">
+        <span class="part-num mono">{(post.data.part || 0).toString().padStart(2, '0')}</span>
+        <div class="part-body">
+          <div class="part-title">{post.data.title}</div>
+          <div class="part-meta mono">{post.data.pubDate.toLocaleDateString('pt-BR', { month: 'short', day: '2-digit' })}</div>
+        </div>
+      </a>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .back { font-family: var(--font-mono); font-size: 12px; color: var(--text-tertiary); text-decoration: none; display: inline-block; margin-bottom: 1.5rem; }
+  .back:hover { color: var(--text); opacity: 1; }
+  .series-meta { font-size: 11px; color: var(--text-tertiary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  h1 { font-size: 22px; margin-bottom: 1rem; }
+  .series-desc { font-size: 15px; color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.7; }
+  .prose { margin-bottom: 2rem; }
+  .part-list { display: flex; flex-direction: column; border-top: 0.5px solid var(--border); }
+  .part-row { display: grid; grid-template-columns: 30px 1fr; gap: 16px; padding: 14px 0; border-bottom: 0.5px solid var(--border); align-items: baseline; text-decoration: none; color: var(--text); }
+  .part-row:hover { background: var(--bg-secondary); margin: 0 -8px; padding: 14px 8px; opacity: 1; }
+  .part-num { font-size: 11px; color: var(--text-tertiary); }
+  .part-title { font-size: 14px; }
+  .part-meta { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+</style>

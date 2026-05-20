@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allSeries = await getCollection('series', ({ data }) => data.lang === 'pt');
+const allPosts = await getCollection('posts', ({ data }) => !data.draft && data.lang === 'pt');
+
+const seriesWithCounts = allSeries
+  .map((s) => ({ ...s, postCount: allPosts.filter((p) => p.data.series === s.slug).length }))
+  .sort((a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf());
+
+const statusLabels = { ongoing: 'em andamento', completed: 'concluída', paused: 'pausada' };
+---
+
+<BaseLayout title="Séries" description="Escritos em múltiplas partes sobre temas específicos." lang="pt">
+  <h1>Séries</h1>
+  <p class="lede">Posts em múltiplas partes sobre um mesmo tema. Cada série se constrói até formar um todo.</p>
+
+  <div id="series-results" class="series-list">
+    {seriesWithCounts.map((s) => (
+      <a
+        href={`/pt/series/${s.slug}`}
+        class="series-card"
+        data-search={`${s.data.title} ${s.data.description} ${statusLabels[s.data.status]}`}
+      >
+        <div class="series-meta mono">{statusLabels[s.data.status]} · {s.postCount} posts</div>
+        <div class="series-title">{s.data.title}</div>
+        <div class="series-desc">{s.data.description}</div>
+      </a>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.5rem; }
+  .lede { color: var(--text-secondary); font-size: 14px; margin-bottom: 1.5rem; }
+  .series-list { display: flex; flex-direction: column; gap: 12px; }
+  .series-card { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 16px 18px; text-decoration: none; color: var(--text); display: block; transition: background var(--transition); }
+  .series-card:hover { background: var(--bg-tertiary); opacity: 1; }
+  .series-meta { font-size: 11px; color: var(--text-tertiary); margin-bottom: 6px; }
+  .series-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+  .series-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+</style>

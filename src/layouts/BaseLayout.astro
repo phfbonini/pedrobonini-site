@@ -1,0 +1,89 @@
+---
+import { SITE } from '../lib/config';
+import Sidebar from '../components/Sidebar.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  lang?: 'en' | 'pt';
+  ogImage?: string;
+  type?: 'website' | 'article';
+  pubDate?: Date;
+}
+
+const {
+  title,
+  description = 'Software engineer building public-sector tech for Brazil. Notes on AI agents, engineering, and career.',
+  lang = 'en',
+  ogImage = '/og-default.png',
+  type = 'website',
+  pubDate,
+} = Astro.props;
+
+const fullTitle = title === SITE.name ? SITE.name : `${title} · ${SITE.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<!doctype html>
+<html lang={lang === 'pt' ? 'pt-BR' : 'en'}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.name} · RSS`} href="/rss.xml" />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={SITE.name} />
+
+    <!-- open graph -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site).toString()} />
+    <meta property="og:locale" content={lang === 'pt' ? 'pt_BR' : 'en_US'} />
+
+    <!-- twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, Astro.site).toString()} />
+
+    {pubDate && <meta property="article:published_time" content={pubDate.toISOString()} />}
+  </head>
+  <body>
+    <div class="page-shell">
+      <Sidebar lang={lang} currentPath={currentPath} />
+      <main>
+        <slot />
+      </main>
+    </div>
+    <Footer lang={lang} />
+  </body>
+</html>
+
+<style>
+  .page-shell {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 2rem;
+    flex: 1;
+    width: 100%;
+  }
+
+  main {
+    min-width: 0;
+  }
+
+  @media (max-width: 600px) {
+    .page-shell {
+      padding: 1.5rem 1rem 2rem;
+    }
+  }
+</style>

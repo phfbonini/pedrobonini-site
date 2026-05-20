@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Sobre" description="Engenheiro de software construindo tecnologia para o setor público no Brasil." lang="pt">
+  <h1>Sobre</h1>
+
+  <p>
+    Meu nome é Pedro Bonini e sou desenvolvedor de software desde [ano]. Boa parte do meu trabalho recente vive na intersecção entre tecnologia para o setor público e ferramentas com IA.
+  </p>
+
+  <p>
+    Na <a href="https://elotech.com.br" target="_blank" rel="noopener">Elotech Gestão Pública</a>, trabalho em sistemas que sustentam a gestão pública municipal em todo o Brasil — motores de tributação, serviços ao cidadão, reporte financeiro. A plataforma atende [N] municípios e impacta milhões de contribuintes. Esse trabalho moldou como penso sobre confiabilidade, compatibilidade e o custo do descuido quando pessoas reais dependem do que tu publica.
+  </p>
+
+  <p>
+    Em paralelo, lidero boa parte do nosso trabalho interno em IA para engenharia. Construo agentes com Claude Code, desenho Skills que automatizam partes do nosso fluxo de desenvolvimento, e participo do Comitê de IA da empresa — onde definimos as diretrizes de como devs realmente usam IA no dia a dia, o que é seguro entregar e o que não é.
+  </p>
+
+  <p>
+    O que escrevo aqui geralmente vem desse trabalho: observações práticas de times reais de engenharia usando IA, sem hype e sem desdém. O tipo de post que eu gostaria de ter lido há dezoito meses.
+  </p>
+
+  <h2>Onde me achar</h2>
+  <table class="contact-table">
+    <tr><td class="muted">github</td><td class="mono"><a href="https://github.com/phfbonini" target="_blank" rel="noopener">phfbonini</a></td></tr>
+    <tr><td class="muted">linkedin</td><td class="mono"><a href="https://www.linkedin.com/in/phfbonini/" target="_blank" rel="noopener">phfbonini</a></td></tr>
+    <tr><td class="muted">email</td><td class="mono"><a href="mailto:phf_apps@outlook.com">phf_apps@outlook.com</a></td></tr>
+  </table>
+
+  <h2>Currículo</h2>
+  <p class="mono small">
+    <a href="/cv-pt.pdf" target="_blank">cv-pt.pdf</a> · <a href="/cv-en.pdf" target="_blank">cv-en.pdf</a>
+  </p>
+</BaseLayout>
+
+<style>
+  h1 { font-size: 22px; margin-bottom: 1.5rem; }
+  h2 { margin-top: 2.5rem; }
+  p { margin-bottom: 1.25rem; line-height: 1.75; }
+  .contact-table { width: auto; margin: 0.5rem 0 1.25rem; }
+  .contact-table td { padding: 4px 1.5rem 4px 0; border: none; font-size: 14px; }
+  .contact-table td:first-child { width: 90px; }
+  .small { font-size: 13px; }
+</style>

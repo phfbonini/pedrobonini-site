@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const projects = (await getCollection('projects', ({ data }) => data.lang === 'pt')).sort(
+  (a, b) => b.data.year - a.data.year,
+);
+---
+
+<BaseLayout
+  title="Projetos"
+  description="Coisas que construí — projetos pessoais, ferramentas, experimentos."
+  lang="pt"
+>
+  <h1>Projetos</h1>
+  <p class="lede">Coisas que construí — projetos pessoais, ferramentas e experimentos.</p>
+
+  <div class="project-list">
+    {
+      projects.map((p) => (
+        <article class="project">
+          <div class="project-head">
+            <h2 class="project-title">{p.data.title}</h2>
+            <span class="mono year">{p.data.year}</span>
+          </div>
+          <p class="project-desc">{p.data.description}</p>
+          <div class="project-meta">
+            <div class="stack">
+              {p.data.stack.map((tech) => (
+                <span class="tech">{tech}</span>
+              ))}
+            </div>
+            <div class="links">
+              {p.data.repoUrl && (
+                <a href={p.data.repoUrl} target="_blank" rel="noopener">
+                  repo →
+                </a>
+              )}
+              {p.data.liveUrl && (
+                <a href={p.data.liveUrl} target="_blank" rel="noopener">
+                  site →
+                </a>
+              )}
+            </div>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.5rem; }
+  .lede { color: var(--text-secondary); font-size: 14px; margin-bottom: 2.5rem; }
+  .project-list { display: flex; flex-direction: column; gap: 1.25rem; }
+  .project { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 16px 18px; transition: background var(--transition); }
+  .project:hover { background: var(--bg-tertiary); }
+  .project-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; gap: 1rem; }
+  .project-title { font-size: 15px; font-weight: 600; margin: 0; }
+  .year { font-size: 11px; color: var(--text-tertiary); }
+  .project-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 10px; }
+  .project-meta { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .stack { display: flex; gap: 4px; flex-wrap: wrap; }
+  .tech { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-tertiary); background: var(--bg); border: 0.5px solid var(--border); padding: 2px 8px; border-radius: 999px; }
+  .links { display: flex; gap: 0.75rem; font-family: var(--font-mono); font-size: 12px; }
+  .links a { color: var(--text-secondary); text-decoration: none; }
+  .links a:hover { color: var(--text); opacity: 1; }
+</style>

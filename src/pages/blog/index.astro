@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// group by year
+const grouped = posts.reduce<Record<number, typeof posts>>((acc, p) => {
+  const year = p.data.pubDate.getFullYear();
+  if (!acc[year]) acc[year] = [];
+  acc[year].push(p);
+  return acc;
+}, {});
+
+const years = Object.keys(grouped)
+  .map(Number)
+  .sort((a, b) => b - a);
+---
+
+<BaseLayout title="Posts" description="Writing on AI agents, engineering, and career." lang="en">
+  <h1>Writing</h1>
+  <p class="lede">Notes on AI agents, engineering practice, and career.</p>
+
+  <div id="post-results">
+    {
+      years.map((year) => (
+        <section class="year-group" data-search-group>
+          <div class="year-label mono">{year}</div>
+          <ul class="post-list">
+            {grouped[year].map((post) => (
+              <li
+                data-search={`${post.data.title} ${post.data.description} ${post.data.category} ${(post.data.tags || []).join(' ')}`}
+              >
+                <a href={`/blog/${post.slug}`}>
+                  <span class="post-date mono">
+                    {post.data.pubDate.toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: '2-digit',
+                    })}
+                  </span>
+                  <div class="post-body">
+                    <div class="post-title">{post.data.title}</div>
+                    <div class="post-meta mono">{post.data.category}</div>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+  }
+
+  .lede {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 1.5rem;
+  }
+
+  .year-group {
+    margin-bottom: 2rem;
+  }
+
+  .year-label {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-bottom: 0.5rem;
+  }
+
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-list a {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 0.5px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+    align-items: baseline;
+  }
+
+  .post-list a:hover {
+    opacity: 1;
+    background: var(--bg-secondary);
+    margin: 0 -8px;
+    padding: 12px 8px;
+  }
+
+  .post-date {
+    color: var(--text-tertiary);
+    font-size: 11px;
+  }
+
+  .post-title {
+    font-size: 14px;
+  }
+
+  .post-meta {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+</style>

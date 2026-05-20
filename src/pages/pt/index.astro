@@ -1,0 +1,133 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE } from '../../lib/config';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'pt'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 5);
+
+const series = (await getCollection('series', ({ data }) => data.lang === 'pt'))
+  .sort((a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf());
+
+const allPosts = await getCollection('posts', ({ data }) => !data.draft && data.lang === 'pt');
+const seriesWithCounts = series.map((s) => ({
+  ...s,
+  postCount: allPosts.filter((p) => p.data.series === s.slug).length,
+}));
+
+const categoryCounts = allPosts.reduce<Record<string, number>>((acc, p) => {
+  acc[p.data.category] = (acc[p.data.category] || 0) + 1;
+  return acc;
+}, {});
+
+const categoryLabels: Record<string, string> = {
+  'ai-agents': 'ia-agentes',
+  engineering: 'engenharia',
+  career: 'carreira',
+  personal: 'pessoal',
+};
+const categories = Object.keys(categoryLabels);
+---
+
+<BaseLayout
+  title="Pedro Bonini"
+  description="Engenheiro de software construindo tecnologia para o setor público no Brasil. Notas sobre agentes de IA, engenharia e carreira."
+  lang="pt"
+>
+  <section class="hero">
+    <div class="hero-head">
+      <img src={SITE.avatar} alt={SITE.name} class="hero-avatar" width="88" height="88" loading="eager" />
+      <h1>Meu nome é Pedro Bonini.</h1>
+    </div>
+    <p>
+      Sou engenheiro de software no sul do Brasil. Na <a
+        href="https://elotech.com.br"
+        target="_blank"
+        rel="noopener">Elotech</a
+      >, grande parte do meu trabalho é focada em otimizar a gestão pública de cidades em todo o
+      país, desenvolvendo sistemas que impactam milhões de contribuintes diariamente.
+    </p>
+    <p>
+      Em paralelo, construo agentes voltados ao desenvolvimento, skills para automação de tarefas e
+      projetos pessoais que transformam ideias em produtos reais.
+    </p>
+    <p>
+      Escrevo sobre tecnologia, desenvolvimento de software, automação e os aprendizados que surgem
+      no processo de construir. Em português e em inglês.
+    </p>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <span class="block-title">Posts recentes</span>
+      <a href="/pt/blog" class="block-link">ver todos →</a>
+    </div>
+    <ul class="post-list">
+      {
+        posts.map((post) => (
+          <li>
+            <a href={`/pt/blog/${post.slug}`}>
+              <span class="post-title">{post.data.title}</span>
+              <span class="post-date mono">
+                {post.data.pubDate.toLocaleDateString('pt-BR', {
+                  month: 'short',
+                  day: '2-digit',
+                })}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <span class="block-title">Categorias</span>
+    </div>
+    <div class="categories">
+      {
+        categories.map((cat) => (
+          <a href={`/pt/blog?category=${cat}`} class="category-pill">
+            {categoryLabels[cat]}{' '}
+            <span class="mono category-count">{categoryCounts[cat] || 0}</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* same styles as English version */
+  .hero { margin-bottom: 3rem; }
+  .hero-head { display: flex; align-items: center; gap: 1.1rem; margin-bottom: 1.25rem; }
+  .hero-avatar { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 0.5px solid var(--border); flex-shrink: 0; }
+  .hero h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0; line-height: 1.25; }
+  @media (max-width: 480px) {
+    .hero-avatar { width: 64px; height: 64px; }
+    .hero h1 { font-size: 22px; }
+  }
+  .hero p { font-size: 15px; line-height: 1.75; margin-bottom: 0.75rem; }
+  .block { margin-bottom: 2.5rem; }
+  .block-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.75rem; }
+  .block-title { font-size: 12px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+  .block-link { font-size: 12px; color: var(--text-tertiary); text-decoration: none; }
+  .block-link:hover { color: var(--text); opacity: 1; }
+  .post-list { list-style: none; padding: 0; margin: 0; }
+  .post-list a { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--border); color: var(--text); text-decoration: none; font-size: 14px; }
+  .post-list a:hover { opacity: 1; background: var(--bg-secondary); margin: 0 -8px; padding: 10px 8px; }
+  .post-date { color: var(--text-tertiary); font-size: 11px; align-self: center; }
+  .series-list { display: flex; flex-direction: column; gap: 10px; }
+  .series-card { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 12px 14px; text-decoration: none; color: var(--text); transition: background var(--transition); }
+  .series-card:hover { background: var(--bg-tertiary); opacity: 1; }
+  .series-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+  .series-title { font-weight: 500; font-size: 14px; }
+  .series-count { font-size: 11px; color: var(--text-tertiary); }
+  .series-desc { font-size: 13px; color: var(--text-secondary); }
+  .categories { display: flex; gap: 6px; flex-wrap: wrap; }
+  .category-pill { font-size: 13px; padding: 4px 12px; border-radius: 999px; background: var(--bg-secondary); color: var(--text); text-decoration: none; }
+  .category-pill:hover { background: var(--bg-tertiary); opacity: 1; }
+  .category-count { color: var(--text-tertiary); font-size: 11px; margin-left: 4px; }
+</style>

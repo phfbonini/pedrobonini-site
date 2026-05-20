@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="Software engineer building public-sector tech for Brazil."
+  lang="en"
+>
+  <h1>About</h1>
+
+  <p>
+    I'm Pedro Bonini, a software engineer based in southern Brazil. I've been writing software
+    professionally since [year], and most of my recent work has lived at the intersection of
+    public-sector technology and AI tooling.
+  </p>
+
+  <p>
+    At <a href="https://elotech.com.br" target="_blank" rel="noopener">Elotech Gestão Pública</a>, I
+    work on systems that power municipal government across Brazil — sales tax engines, citizen
+    services, financial reporting. The platform serves [N] cities and reaches millions of taxpayers.
+    Doing this work has shaped how I think about reliability, backwards compatibility, and the cost
+    of carelessness when real people depend on what you ship.
+  </p>
+
+  <p>
+    In parallel, I lead a lot of our internal work on AI for engineering. I build agents with Claude
+    Code, design Skills that automate parts of our development workflow, and sit on the company's AI
+    Committee — where we set guidelines for how developers actually use AI day to day, what's safe
+    to ship, and what isn't.
+  </p>
+
+  <p>
+    What I write here usually comes from that work: practical observations from real engineering
+    teams using AI, without hype and without dismissal. The kind of post I wish I could have read
+    eighteen months ago.
+  </p>
+
+  <h2>Find me</h2>
+  <table class="contact-table">
+    <tr><td class="muted">github</td><td class="mono"><a href="https://github.com/phfbonini" target="_blank" rel="noopener">phfbonini</a></td></tr>
+    <tr><td class="muted">linkedin</td><td class="mono"><a href="https://www.linkedin.com/in/phfbonini/" target="_blank" rel="noopener">phfbonini</a></td></tr>
+    <tr><td class="muted">email</td><td class="mono"><a href="mailto:phf_apps@outlook.com">phf_apps@outlook.com</a></td></tr>
+  </table>
+
+  <h2>Résumé</h2>
+  <p class="mono small">
+    <a href="/cv-en.pdf" target="_blank">cv-en.pdf</a> · <a href="/cv-pt.pdf" target="_blank"
+      >cv-pt.pdf</a
+    >
+  </p>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: 22px;
+    margin-bottom: 1.5rem;
+  }
+  h2 {
+    margin-top: 2.5rem;
+  }
+  p {
+    margin-bottom: 1.25rem;
+    line-height: 1.75;
+  }
+  .contact-table {
+    width: auto;
+    margin: 0.5rem 0 1.25rem;
+  }
+  .contact-table td {
+    padding: 4px 1.5rem 4px 0;
+    border: none;
+    font-size: 14px;
+  }
+  .contact-table td:first-child {
+    width: 90px;
+  }
+  .small {
+    font-size: 13px;
+  }
+</style>

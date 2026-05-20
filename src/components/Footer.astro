@@ -1,0 +1,76 @@
+---
+import { SITE } from '../lib/config';
+
+interface Props {
+  lang?: 'en' | 'pt';
+}
+
+const { lang = 'en' } = Astro.props;
+const year = new Date().getFullYear();
+
+const labels = {
+  en: {
+    builtWith: 'built with Astro',
+    rss: 'rss',
+  },
+  pt: {
+    builtWith: 'feito com Astro',
+    rss: 'rss',
+  },
+};
+
+const t = labels[lang];
+const rssHref = lang === 'en' ? '/rss.xml' : '/pt/rss.xml';
+---
+
+<footer>
+  <div class="links">
+    <a href={SITE.github} target="_blank" rel="noopener">github</a>
+    <span class="sep">·</span>
+    <a href={SITE.linkedin} target="_blank" rel="noopener">linkedin</a>
+    <span class="sep">·</span>
+    <a href={rssHref}>{t.rss}</a>
+    <span class="sep">·</span>
+    <a href={`mailto:${SITE.email}`}>email</a>
+  </div>
+  <div class="meta">© {year} {SITE.name} · {t.builtWith}</div>
+</footer>
+
+<style>
+  footer {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 2rem;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-tertiary);
+    text-align: center;
+    border-top: 0.5px solid var(--border);
+    width: 100%;
+  }
+
+  .links {
+    margin-bottom: 6px;
+  }
+
+  .links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+  }
+
+  .links a:hover {
+    color: var(--text);
+    opacity: 1;
+  }
+
+  .sep {
+    margin: 0 6px;
+    color: var(--text-tertiary);
+  }
+
+  @media (max-width: 600px) {
+    footer {
+      padding: 2rem 1rem;
+    }
+  }
+</style>

@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Uses" description="Ferramentas e stack que uso no dia a dia." lang="pt">
+  <h1>Uses</h1>
+  <p class="lede">
+    As ferramentas e tecnologias que efetivamente uso no dia a dia. Atualizado quando algo relevante
+    muda.
+  </p>
+
+  <h2>Hardware</h2>
+  <dl class="kv">
+    <dt>Máquina principal</dt>
+    <dd>Avell A52 — Intel i5 13ª, 32 GB RAM, 512 GB SSD, RTX 3050 · Linux Mint</dd>
+
+    <dt>Máquina secundária</dt>
+    <dd>Lenovo IdeaPad Gaming 3i — Intel i7 10ª, 16 GB RAM, 512 GB SSD, GTX 1650 · Windows 11</dd>
+
+    <dt>Monitor</dt>
+    <dd>AOC Hero 27" · 144 Hz</dd>
+
+    <dt>Mouse</dt>
+    <dd>Ajazz AJ179 Pro</dd>
+
+    <dt>Teclado</dt>
+    <dd>T-Dagger TGS005</dd>
+  </dl>
+
+  <h2>Editor e terminal</h2>
+  <ul>
+    <li><strong>IntelliJ IDEA</strong> para backend / Java</li>
+    <li><strong>VS Code</strong> para frontend, scripts e edição rápida</li>
+    <li><strong>Kitty</strong> como terminal, com <strong>fish</strong> shell</li>
+  </ul>
+
+  <h2>Skills e IA</h2>
+  <ul>
+    <li><strong>Claude Code</strong> como agente principal para tarefas de engenharia</li>
+    <li>Skills personalizadas para fluxos do dia a dia (code review, geração de docs, refactors)</li>
+    <li>
+      Também uso o repositório <a
+        href="https://github.com/obra/superpowers"
+        target="_blank"
+        rel="noopener">obra/superpowers</a
+      > como base de Skills compartilhadas
+    </li>
+  </ul>
+
+  <h2>Linguagens e stacks</h2>
+
+  <h3>AI & Agentic Development</h3>
+  <p>
+    Claude Code, agentes de IA, prompt engineering, AI governance, automação de workflows, code
+    review automatizado, geração de documentação e análise de produto/requisitos.
+  </p>
+
+  <h3>Backend</h3>
+  <p>
+    Java (8–21), Node.js, TypeScript, Spring Boot, Spring Batch, REST, GraphQL, RabbitMQ,
+    PostgreSQL, MySQL, ElasticSearch, Liquibase. Arquitetura monolítica e microsserviços, Clean
+    Architecture, TDD e testes unitários.
+  </p>
+
+  <h3>Frontend & Mobile</h3>
+  <p>
+    React.js, React Native, JavaScript, TypeScript, Android nativo, Redux, Formik. Integração via
+    APIs REST e BLE, componentização, gerenciamento de estado e testes com React Testing Library.
+  </p>
+
+  <h3>DevOps & Infraestrutura</h3>
+  <p>
+    Docker, Git/GitFlow, pipelines CI/CD, servidores Ubuntu, deploy automatizado e sistemas de
+    telemetria/monitoramento.
+  </p>
+
+  <h2>Especialidades</h2>
+  <p>
+    Sistemas multitenant, otimização com ElasticSearch, comunicação IoT/BLE, monitoramento agrícola,
+    SaaS para gestão pública, padronização de IA entre times, liderança técnica, onboarding e
+    mentoria.
+  </p>
+
+  <p class="footnote mono">
+    Inspirado por <a href="https://uses.tech/" target="_blank" rel="noopener">uses.tech</a>.
+  </p>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+  }
+  .lede {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 2rem;
+  }
+  h2 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 2.25rem;
+    margin-bottom: 0.75rem;
+  }
+  h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 1.25rem;
+    margin-bottom: 0.4rem;
+    color: var(--text);
+  }
+  ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  li {
+    margin-bottom: 0.4rem;
+    font-size: 14px;
+  }
+  p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+  }
+  .kv {
+    display: grid;
+    grid-template-columns: minmax(120px, 180px) 1fr;
+    gap: 0.4rem 1rem;
+    margin: 0 0 1rem;
+    font-size: 14px;
+  }
+  .kv dt {
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding-top: 2px;
+  }
+  .kv dd {
+    margin: 0;
+    color: var(--text);
+  }
+  .footnote {
+    margin-top: 2.5rem;
+    font-size: 11px;
+    color: var(--text-tertiary);
+  }
+  @media (max-width: 520px) {
+    .kv {
+      grid-template-columns: 1fr;
+      gap: 0.1rem 0;
+    }
+    .kv dt {
+      padding-top: 0.5rem;
+    }
+  }
+</style>
